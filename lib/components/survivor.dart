@@ -1,5 +1,8 @@
+import 'dart:math';
 import 'dart:ui';
+import 'package:flame/flame.dart';
 import 'package:deadcity/game.dart';
+import 'package:deadcity/components/zombie.dart';
 
 class Survivor {
   final DeadCityGame game;
@@ -7,12 +10,17 @@ class Survivor {
   double sSize;
   Paint paint = Paint();
 
-  double get speed => game.tileSize * 1;
+  double speed;
   Offset targetLocation;
 
-  Survivor(this.game, double x, double y) {
+  bool mobile;
+
+  List<Zombie> zombies = <Zombie>[];
+
+  Survivor(this.game, this.zombies, double x, double y, this.mobile) {
+    speed = this.game.tileSize * 0.25;
     sRect = Rect.fromLTWH(x, y, 10, 10);
-    paint.color = Color.fromRGBO(135, 206, 250, 75);
+    paint.color = Color.fromRGBO(135, 206, 250, 100);
     setTargetLocation();
   }
 
@@ -27,6 +35,12 @@ class Survivor {
   }
 
   void update(double t) {
+    if (mobile) {
+      wander(t);
+    }
+  }
+
+  void wander(double t) {
     double stepDistance = speed * t;
     Offset toTarget = targetLocation - Offset(sRect.left, sRect.top); 
     if (stepDistance < toTarget.distance) {
@@ -36,5 +50,10 @@ class Survivor {
       sRect = sRect.shift(toTarget);
       setTargetLocation();
     }
+  }
+
+  void playDeathAudio() {
+    Random rnd = new Random();
+    Flame.audio.play('sfx/survivor_death' + (rnd.nextInt(2) + 1).toString() + '.mp3');
   }
 }

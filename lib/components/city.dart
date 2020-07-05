@@ -1,48 +1,33 @@
 import 'dart:ui';
+import 'package:deadcity/game.dart';
+import 'package:deadcity/components/lot.dart';
 
 class City {
-  List<String> listOfBuildingType = ["small", "medium", "large"];
+  final DeadCityGame game;
+  List<Lot> lots;
 
-  void createCity(Canvas canvas) {
+  City(this.game) {
+    initialize();
+  }
+
+  void initialize() async {
+    lots = List<Lot>();
+    spawnCity();
+  }
+
+  void spawnCity() {
     double top = 155.0;
-    for (int i = 1; i <= 8; i++) {
-      createBuildingRow(canvas, top);
+    for (int i = 0; i <= 7; i++) {
+      spawnLotRow(top);
       top = (top + 70.0).toDouble();
     }
   }
 
-  void createBuildingRow(Canvas canvas, double top) {
-    double length = 15.0;
-    for (int i = 1; i <= 6; i++) { 
-      String buildingType = (listOfBuildingType..shuffle()).first;
-      createBuilding(canvas, length, top, buildingType);
+  void spawnLotRow(double top) {
+    double length = 14.0;
+    for (int i = 1; i <= 6; i++) {
+      lots.add(Lot(this.game, length, top));
       length = (length + 65.0).toDouble();
     }
   }
-
-  void createBuilding(Canvas canvas, double left, double top, String buildingType) {
-    double width, height;
-
-    switch(buildingType) {
-      // case "large":
-      //   width = 60.0;
-      //   height = 60.0;
-      //   break;
-      // case "medium":
-      //   width = 55.0;
-      //   height = 55.0;
-      //   break;
-      default:
-        width = 50.0;
-        height = 50.0;
-    }
-
-    Rect buildingRect = Rect.fromLTWH(left, top, width, height);
-
-    Paint buildingPaint = Paint();
-    buildingPaint.color = Color.fromRGBO(192, 192, 192, 100);
-
-    canvas.drawRect(buildingRect, buildingPaint);
-  }
-
 }
