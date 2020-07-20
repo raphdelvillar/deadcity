@@ -1,6 +1,6 @@
 # deadcity
 
-A new Flutter project.
+A zombie simulation built on flutter flame
 
 ## Getting Started
 
